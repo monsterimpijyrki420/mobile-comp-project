@@ -13,7 +13,7 @@ data class Reminder(
     @ColumnInfo(name = "location_x") val location_x: Double = 0.0,
     @ColumnInfo(name = "location_y") val location_y: Double = 0.0,
 
-    @ColumnInfo(name = "reminder_time") val reminder_time: String,
+    @ColumnInfo(name = "reminder_time") val reminder_time: Long,
     @ColumnInfo(name = "creation_time") val creation_time: Long,
     @ColumnInfo(name = "creator_id") val creator_id: String,
     @ColumnInfo(name = "reminder_seen") val reminder_seen: Boolean = false
@@ -39,6 +39,9 @@ interface ReminderDao {
 
     @Query("SELECT * FROM reminder_table WHERE creator_id LIKE :creator_id")
     fun getReminders(creator_id: String): List<Reminder>
+
+    @Query("SELECT * FROM reminder_table WHERE creator_id LIKE :creator_id and reminder_time < :current_time")
+    fun getTimelyReminders(creator_id: String, current_time: Long): List<Reminder>
 }
 
 @Database(entities = [Reminder::class], version = 1, exportSchema = false)
@@ -69,9 +72,13 @@ class ReminderDB {
         return reminderDao.getReminders(creator_id)
     }
 
+    fun getTimelyReminders(creator_id: String, current_time: Long): List<Reminder> {
+        return reminderDao.getTimelyReminders(creator_id, current_time)
+    }
+
     //fun addMessage(message: String, location_x: Double, location_y: Double,
     //                       reminder_time: Long, creation_time: Long, creator_id: String) {
-    fun addMessage(message: String, creation_time: Long, creator_id: String, reminder_time: String) {
+    fun addMessage(message: String, creation_time: Long, creator_id: String, reminder_time: Long) {
         val reminder = Reminder(
             message = message,
             //location_x = location_x,
