@@ -8,11 +8,8 @@ import androidx.room.*
 @Entity(tableName = "reminder_table", primaryKeys = ["creation_time", "creator_id"])
 data class Reminder(
     @ColumnInfo(name = "message") val message: String,
-
-    //location not implemented yet
     @ColumnInfo(name = "location_x") val location_x: Double = 0.0,
     @ColumnInfo(name = "location_y") val location_y: Double = 0.0,
-
     @ColumnInfo(name = "reminder_time") val reminder_time: Long,
     @ColumnInfo(name = "creation_time") val creation_time: Long,
     @ColumnInfo(name = "creator_id") val creator_id: String,
@@ -76,13 +73,12 @@ class ReminderDB {
         return reminderDao.getTimelyReminders(creator_id, current_time)
     }
 
-    //fun addMessage(message: String, location_x: Double, location_y: Double,
-    //                       reminder_time: Long, creation_time: Long, creator_id: String) {
-    fun addMessage(message: String, creation_time: Long, creator_id: String, reminder_time: Long) {
+    fun addMessage(message: String, location_x: Double, location_y: Double,
+                   creation_time: Long, creator_id: String, reminder_time: Long) {
         val reminder = Reminder(
             message = message,
-            //location_x = location_x,
-            //location_y = location_y,
+            location_x = location_x,
+            location_y = location_y,
             reminder_time = reminder_time,
             creation_time = creation_time,
             creator_id = creator_id
